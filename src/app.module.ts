@@ -8,6 +8,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { typeOrmModuleOptions } from './utils/typeOrmModuleOptions';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
+import { RefererModule } from './referer/referer.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { AuthModule } from './auth/auth.module';
     PostsModule,
     UsersModule,
     AuthModule,
+    RefererModule,
   ],
   controllers: [AppController],
   providers: [AppService],
