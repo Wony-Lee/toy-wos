@@ -6,7 +6,7 @@ import { ConfigService } from '@nestjs/config';
 export const swaggerOptions = (app: INestApplication): void => {
   const configService = app.get(ConfigService);
   app.use(
-    ['/api-docs'],
+    ['/docs'],
     expressBasicAuth({
       challenge: true,
       users: {

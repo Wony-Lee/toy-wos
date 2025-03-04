@@ -20,10 +20,10 @@ export class AuthController {
     return this.authService.create(createAuthDto);
   }
 
-  @Get()
-  findAll() {
-    return this.authService.createUniqueCodeSample();
-  }
+  // @Get()
+  // findAll() {
+  //   return this.authService.createUniqueCodeSample();
+  // }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
