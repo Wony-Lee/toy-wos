@@ -125,7 +125,6 @@ export class AuthService {
     if (!user) {
       throw new BadRequestException('존재하지 않는 이메일입니다.');
     }
-
     return user;
   }
 
@@ -136,12 +135,4 @@ export class AuthService {
   remove(id: number) {
     return `This action removes a #${id} auth`;
   }
-
-  // generateUniqueCode(): string {
-  //   const letters = Math.random().toString(36).substring(2, 4).toUpperCase();
-  //   const numbers = Math.floor(Math.random() * 10000)
-  //     .toString()
-  //     .padStart(4, '0'); // 4 digits
-  //   return `${letters}${numbers}`;
-  // }
 }
