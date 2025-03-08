@@ -6,6 +6,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { GENDER_TYPE } from '../../auth/dto/create-auth.dto';
 
 @Entity()
 export class User {
@@ -43,9 +44,10 @@ export class User {
   phoneNumber: string;
 
   @Column({
-    default: 0,
+    enum: GENDER_TYPE,
+    default: GENDER_TYPE.NONE,
   })
-  gender: number;
+  gender: GENDER_TYPE;
 
   @Column({
     default: '',
@@ -82,6 +84,7 @@ export class User {
   @DeleteDateColumn({
     type: 'datetime',
     precision: 6,
+    default: () => 'CURRENT_TIMESTAMP(6)',
     nullable: true,
   })
   deletedAt: Date;

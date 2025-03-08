@@ -32,13 +32,6 @@ export class Post {
   })
   createdAt: Date;
 
-  @Column({
-    type: 'varchar',
-    length: 255,
-    nullable: true,
-  })
-  ip: string;
-
   @DeleteDateColumn({
     type: 'datetime',
     precision: 6,
@@ -46,4 +39,11 @@ export class Post {
     nullable: true,
   })
   deletedAt: Date;
+
+  @Column({
+    type: 'varchar',
+    length: 255,
+    nullable: true,
+  })
+  ip: string;
 }

@@ -9,6 +9,7 @@ import { typeOrmModuleOptions } from './utils/typeOrmModuleOptions';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { RefererModule } from './referer/referer.module';
+import { GatheringsModule } from './gatherings/gatherings.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { RefererModule } from './referer/referer.module';
     UsersModule,
     AuthModule,
     RefererModule,
+    GatheringsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
