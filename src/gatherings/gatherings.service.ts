@@ -45,7 +45,7 @@ export class GatheringsService {
     }
   }
 
-  create(createGatheringDto: CreateGatheringDto) {
+  async create(createGatheringDto: CreateGatheringDto) {
     const { title, region, content, charge, maxMember, minMember } =
       createGatheringDto;
 
@@ -59,7 +59,7 @@ export class GatheringsService {
       maxMember,
       minMember,
     });
-    this.gatheringRepository.save(gathering);
+    await this.gatheringRepository.save(gathering);
 
     return {
       message: 'success',
@@ -67,7 +67,9 @@ export class GatheringsService {
     };
   }
 
-  findAll() {
+  async findAll() {
+    const gatherings = await this.gatheringRepository.find();
+    console.log('gatherings', gatherings);
     return `This action returns all gatherings`;
   }
 
