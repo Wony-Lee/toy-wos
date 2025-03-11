@@ -12,6 +12,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { generateUniqueCode } from '../utils/generateUniqueCode';
 import { ResponseAuthDto } from './dto/response-auth.dto';
 import * as bcyrpt from 'bcrypt';
+import { JwtService } from '@nestjs/jwt';
+import { LoginAuthDto } from './dto/login-auth.dto';
 
 @Injectable()
 export class AuthService {
@@ -22,6 +24,7 @@ export class AuthService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    private readonly jwtService: JwtService,
   ) {}
 
   async create(createAuthDto: CreateAuthDto): Promise<ResponseAuthDto> {
@@ -29,7 +32,6 @@ export class AuthService {
     try {
       const { email, password } = createAuthDto;
 
-      // check if email already exists
       const existingUser = await this.findByEmail(email);
       if (existingUser) {
         return {
@@ -40,20 +42,16 @@ export class AuthService {
 
       await this.validateCreateAuthDto(createAuthDto);
 
-      // create uniqueCode
       const uniqueCode = await this.createUniqueCode();
 
-      // create user
       const user = this.userRepository.create({
         ...createAuthDto,
         uniqueCode,
       });
 
-      // password hashing
       const salt = await bcyrpt.genSalt();
       user.password = await bcyrpt.hash(password, salt);
 
-      // save user
       await this.userRepository.save(user);
 
       this.logger.debug('create end');
@@ -83,7 +81,6 @@ export class AuthService {
     }
   }
 
-  // create uniqueCode
   async createUniqueCode() {
     this.logger.debug('createUniqueCode start');
     try {
@@ -106,8 +103,7 @@ export class AuthService {
     }
   }
 
-  // findByEmail
-  findByEmail = async (email: string) => {
+  async findByEmail(email: string) {
     this.logger.debug('findByEmail start');
     const existingUser = await this.userRepository.existsBy({
       email,
@@ -115,7 +111,7 @@ export class AuthService {
 
     this.logger.debug('findByEmail end');
     return existingUser;
-  };
+  }
 
   async findOne(email: string) {
     const user = await this.userRepository.findOne({
@@ -126,6 +122,49 @@ export class AuthService {
       throw new BadRequestException('존재하지 않는 이메일입니다.');
     }
     return user;
+  }
+
+  async signIn(loginAuthDto: LoginAuthDto): Promise<ResponseAuthDto> {
+    const { email, password } = loginAuthDto;
+    console.log('loginAuthDto', loginAuthDto);
+    const user = await this.userRepository.findOne({
+      where: { email },
+    });
+
+    console.log('user', user);
+    if (!user) {
+      throw new BadRequestException('존재하지 않는 이메일입니다.');
+    }
+
+    const isPasswordValid = await bcyrpt.compare(password, user.password);
+    if (!isPasswordValid) {
+      throw new BadRequestException('비밀번호가 일치하지 않습니다.');
+    }
+
+    try {
+      const payload = {
+        email: user.email,
+        uniqueCode: user.uniqueCode,
+      };
+      const accessToken = this.jwtService.sign(payload, {
+        expiresIn: '1h',
+      });
+      const refreshToken = this.jwtService.sign(payload, {
+        expiresIn: '7d',
+      });
+
+      // await this.userRepository.update(user.id, {
+      //   refreshToken: refreshToken,
+      // });
+
+      return {
+        message: '로그인 성공',
+        statusCode: HttpStatus.OK,
+        accessToken: accessToken,
+      };
+    } catch (e) {
+      console.log('e', e);
+    }
   }
 
   update(id: number, updateAuthDto: UpdateAuthDto) {

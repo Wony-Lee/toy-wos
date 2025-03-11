@@ -21,7 +21,7 @@ export class User {
   email: string;
 
   @Column({
-    select: false,
+    // select: false,
     nullable: false,
     default: '',
   })
@@ -84,7 +84,7 @@ export class User {
   @DeleteDateColumn({
     type: 'datetime',
     precision: 6,
-    default: () => 'CURRENT_TIMESTAMP(6)',
+    // default: () => 'CURRENT_TIMESTAMP(6)',
     nullable: true,
   })
   deletedAt: Date;

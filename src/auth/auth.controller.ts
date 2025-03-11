@@ -6,24 +6,26 @@ import {
   Patch,
   Param,
   Delete,
+  Res,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { UpdateAuthDto } from './dto/update-auth.dto';
-
+import { LoginAuthDto } from './dto/login-auth.dto';
+import { ResponseAuthDto } from './dto/response-auth.dto';
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post()
-  create(@Body() createAuthDto: CreateAuthDto) {
-    return this.authService.create(createAuthDto);
+  async create(@Body() createAuthDto: CreateAuthDto) {
+    return await this.authService.create(createAuthDto);
   }
 
-  // @Get()
-  // findAll() {
-  //   return this.authService.createUniqueCodeSample();
-  // }
+  @Post('signin')
+  signIn(@Body() body: LoginAuthDto): Promise<ResponseAuthDto> {
+    return this.authService.signIn(body);
+  }
 
   @Get(':id')
   findOne(@Param('email') email: string) {

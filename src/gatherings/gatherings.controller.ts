@@ -18,11 +18,12 @@ import { GetUser } from '../decorators/get-user.decarator';
 export class GatheringsController {
   constructor(private readonly gatheringsService: GatheringsService) {}
 
-  @UseGuards(JwtAuthGuard)
+  // @Body() createGatheringDto: CreateGatheringDto
+  // @UseGuards(JwtAuthGuard)
   @Post()
-  create(@GetUser() user: any, @Body() createGatheringDto: CreateGatheringDto) {
+  create(@GetUser() user: any) {
     console.log('user', user);
-    return this.gatheringsService.create(createGatheringDto);
+    // return this.gatheringsService.create(createGatheringDto);
   }
 
   @Get()
