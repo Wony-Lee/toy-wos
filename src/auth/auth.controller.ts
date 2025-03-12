@@ -27,6 +27,11 @@ export class AuthController {
     return this.authService.signIn(body);
   }
 
+  @Post('signout')
+  signOut(@Body() body: LoginAuthDto): Promise<ResponseAuthDto> {
+    return this.authService.signOut(body);
+  }
+
   @Get(':id')
   findOne(@Param('email') email: string) {
     return this.authService.findOne(email);

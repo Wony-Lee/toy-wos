@@ -167,6 +167,26 @@ export class AuthService {
     }
   }
 
+  async signOut(loginAuthDto: LoginAuthDto): Promise<ResponseAuthDto> {
+    const { email } = loginAuthDto;
+    const user = await this.userRepository.findOne({
+      where: { email },
+    });
+
+    if (!user) {
+      throw new BadRequestException('존재하지 않는 이메일입니다.');
+    }
+
+    try {
+      return {
+        message: '로그아웃 성공',
+        statusCode: HttpStatus.OK,
+      };
+    } catch (e) {
+      console.log('e', e);
+    }
+  }
+
   update(id: number, updateAuthDto: UpdateAuthDto) {
     return `This action updates a #${id} auth`;
   }
